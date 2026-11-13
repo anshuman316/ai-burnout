@@ -34,7 +34,39 @@
   --color-on-surface-variant: #59655f;
   --color-outline-variant: #e7ece8;
 
+  /* Equilibria app palette (CLAUDE.md design rules) */
+  --font-serif: "Lora", Georgia, "Times New Roman", serif;
+  --color-canvas: #f8fafb;
+  --color-forest: #14532d;
+  --color-leaf: #2e9b5e;
+  --color-sun: #f6b93b;
+  --color-mint: #e8f5ec;
+  --color-heading: #111827;
+  --color-body: #6b7280;
+  --color-hairline: #e5e7eb;
+
   --animate-gentle-pulse: gentle-pulse 6s ease-in-out infinite;
+  --animate-fade-in: fade-in 350ms ease-out both;
+
+  --animate-word-in: word-in 260ms ease-out both;
+  --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
+
+  /* Chat: each word of a new reply settles in */
+  @keyframes word-in {
+    from { opacity: 0; filter: blur(2px); transform: translateY(2px); }
+    to { opacity: 1; filter: none; transform: none; }
+  }
+
+  /* Chat: the three "thinking" dots */
+  @keyframes typing-dot {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-4px); opacity: 1; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+  }
 
   @keyframes gentle-pulse {
     0%, 100% { transform: scale(1); opacity: 0.35; }
