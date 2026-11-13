@@ -15,6 +15,11 @@ export const supabase = supabaseConfigured
     ? createClient(url, publishableKey, { auth: { flowType: 'pkce' } })
     : null;
 
+// What to say when Google sign-in can't start. A fresh clone has no .env.local, which is the usual cause.
+export const googleSignInProblem = () => (supabaseConfigured
+    ? 'We couldn’t reach Google. Please try again.'
+    : 'The app isn’t connected to Supabase yet. Copy .env.example to .env.local, then restart the dev server.');
+
 // Google sign-in returns to /auth/callback, which sends people to onboarding or home.
 export const signInWithGoogle = () => (!supabase
     ? Promise.resolve({ error: new Error('Supabase is not configured.') })

@@ -6,7 +6,7 @@ import { GoogleButton, OrDivider, PasswordInput } from '../components/auth/field
 import FormNotice from '../components/auth/FormNotice'
 import GoogleIcon from '../components/GoogleIcon'
 import { logInWithUsername } from '../lib/accounts'
-import { signInWithGoogle, supabase } from '../lib/supabase'
+import { googleSignInProblem, signInWithGoogle, supabase } from '../lib/supabase'
 
 const loginProblem = (error) => {
     // One message for wrong details, so nobody can probe which usernames or emails have accounts
@@ -51,7 +51,7 @@ const LoginPage = () => {
     const handleGoogle = async () => {
         setProblem(null);
         const { error } = await signInWithGoogle();
-        if (error) setProblem('We couldn’t reach Google. Please try again.');
+        if (error) setProblem(googleSignInProblem());
     }
 
     return (

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import FormNotice from '../components/auth/FormNotice'
 import GoogleIcon from '../components/GoogleIcon'
 import { Link, useNavigate } from 'react-router-dom'
-import { signInWithGoogle } from '../lib/supabase'
+import { googleSignInProblem, signInWithGoogle } from '../lib/supabase'
 
 const mindStates = [
     { max: 30, text: 'Grounded & Clear', hint: 'Breathe in ease' },
@@ -31,7 +31,7 @@ const HomePage = () => {
     const handleGoogle = async () => {
         setGoogleError(null);
         const { error } = await signInWithGoogle();
-        if (error) setGoogleError('We couldn’t reach Google. Please try again.');
+        if (error) setGoogleError(googleSignInProblem());
     }
 
     const handleOrbClick = () => {
