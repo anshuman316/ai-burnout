@@ -9,7 +9,7 @@ import { Tile, TileHeader } from './Tile'
 const slotClass = 'flex flex-col items-center justify-center gap-2 p-3 rounded-2xl bg-canvas hover:bg-mint transition-colors text-center min-w-0';
 
 const IconBubble = ({ icon, dashed }) => (
-    <span className={`w-10 h-10 rounded-full bg-white border ${dashed ? 'border-dashed text-body' : 'text-forest'} border-hairline flex items-center justify-center`} aria-hidden="true">
+    <span className={`w-10 h-10 rounded-full bg-card border ${dashed ? 'border-dashed text-body' : 'text-forest'} border-hairline flex items-center justify-center`} aria-hidden="true">
         <span className="material-symbols-outlined text-[20px]">{icon}</span>
     </span>
 )

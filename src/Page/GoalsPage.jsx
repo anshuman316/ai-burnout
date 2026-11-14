@@ -46,7 +46,7 @@ const GoalRow = ({ goal, onToggle, onRename, onRemove }) => {
             <form onSubmit={handleRename} className="flex flex-wrap items-center gap-2">
                 <label htmlFor={`goal-edit-${goal.id}`} className="sr-only">Goal</label>
                 <input id={`goal-edit-${goal.id}`} value={draft} onChange={(e) => setDraft(e.target.value)} maxLength={MAX_LENGTH} className={inputClass} autoFocus />
-                <button type="submit" disabled={busy || !draft.trim()} className="h-11 px-4 rounded-xl bg-forest text-white text-[14px] font-medium hover:bg-forest/90 disabled:opacity-60">
+                <button type="submit" disabled={busy || !draft.trim()} className="h-11 px-4 rounded-xl bg-forest text-on-primary text-[14px] font-medium hover:bg-forest/90 disabled:opacity-60">
                     {busy ? 'Saving…' : 'Save'}
                 </button>
                 <button type="button" onClick={() => { setDraft(goal.text); setMode('view'); }} disabled={busy} className={quietButtonClass}>Cancel</button>
@@ -59,7 +59,7 @@ const GoalRow = ({ goal, onToggle, onRename, onRemove }) => {
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="text-[15px] text-heading">Remove “{goal.text}”?</p>
                 <div className="flex gap-2">
-                    <button type="button" onClick={handleRemove} disabled={busy} className="h-9 px-4 rounded-lg bg-forest text-white text-[14px] font-medium hover:bg-forest/90 disabled:opacity-60">
+                    <button type="button" onClick={handleRemove} disabled={busy} className="h-9 px-4 rounded-lg bg-forest text-on-primary text-[14px] font-medium hover:bg-forest/90 disabled:opacity-60">
                         {busy ? 'Removing…' : 'Remove'}
                     </button>
                     <button type="button" onClick={() => setMode('view')} disabled={busy} className={quietButtonClass}>Keep it</button>
@@ -122,14 +122,14 @@ const GoalsManager = () => {
                 {status === 'loading' && <p role="status" className="text-[15px] text-body">Opening your goals…</p>}
 
                 {status === 'error' && (
-                    <div role="alert" className="p-5 rounded-[20px] bg-white border border-hairline flex flex-wrap items-center justify-between gap-3">
+                    <div role="alert" className="p-5 rounded-[20px] bg-card border border-hairline flex flex-wrap items-center justify-between gap-3">
                         <p className="text-[15px] text-heading">We couldn’t load your goals. Check your connection.</p>
                         <button type="button" onClick={reload} className="text-[14px] font-semibold text-forest hover:underline">Try again</button>
                     </div>
                 )}
 
                 {status === 'ready' && (
-                    <section aria-labelledby="goals-list-heading" className="bg-white border border-hairline rounded-[20px] p-5 md:p-6 flex flex-col gap-5 animate-fade-in">
+                    <section aria-labelledby="goals-list-heading" className="bg-card border border-hairline rounded-[20px] p-5 md:p-6 flex flex-col gap-5 animate-fade-in">
                         <h2 id="goals-list-heading" className="sr-only">Your goals</h2>
 
                         {goals.length === 0 ? (
@@ -163,7 +163,7 @@ const GoalsManager = () => {
                                         placeholder="e.g. Phone off by 11pm"
                                         className={inputClass}
                                     />
-                                    <button type="submit" disabled={adding || !newText.trim()} className="h-11 px-5 rounded-xl bg-forest text-white text-[15px] font-medium hover:bg-forest/90 disabled:opacity-60">
+                                    <button type="submit" disabled={adding || !newText.trim()} className="h-11 px-5 rounded-xl bg-forest text-on-primary text-[15px] font-medium hover:bg-forest/90 disabled:opacity-60">
                                         {adding ? 'Adding…' : 'Add goal'}
                                     </button>
                                 </form>

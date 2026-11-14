@@ -14,7 +14,7 @@ const groupByDay = (entries) => entries.reduce((groups, entry) => {
 }, []);
 
 const EntryCard = ({ entry }) => (
-    <Link to={`/diary/${entry.id}`} className="block bg-white border border-hairline rounded-[20px] p-5 hover:border-leaf transition-colors">
+    <Link to={`/diary/${entry.id}`} className="block bg-card border border-hairline rounded-[20px] p-5 hover:border-leaf transition-colors">
         <div className="flex flex-wrap items-center gap-2 text-[13px] text-body">
             <span>{formatTime(entry.createdAt)}</span>
             {entry.isPrivate && (
@@ -60,7 +60,7 @@ const DiaryList = () => {
                         <h1 className="font-headline text-[30px] md:text-[34px] font-semibold tracking-[-0.025em]">My diary</h1>
                         <p className="text-[15px] text-body">Only you can see these.</p>
                     </div>
-                    <Link to="/diary/new" className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-forest text-white text-[15px] font-medium hover:bg-forest/90 transition-colors">
+                    <Link to="/diary/new" className="inline-flex items-center gap-2 h-11 px-5 rounded-xl bg-forest text-on-primary text-[15px] font-medium hover:bg-forest/90 transition-colors">
                         <span className="material-symbols-outlined text-[18px]" aria-hidden="true">add</span>
                         New entry
                     </Link>
@@ -71,14 +71,14 @@ const DiaryList = () => {
                 {state.status === 'loading' && <p role="status" className="text-[15px] text-body">Opening your diary…</p>}
 
                 {state.status === 'error' && (
-                    <div role="alert" className="p-5 rounded-[20px] bg-white border border-hairline flex flex-wrap items-center justify-between gap-3">
+                    <div role="alert" className="p-5 rounded-[20px] bg-card border border-hairline flex flex-wrap items-center justify-between gap-3">
                         <p className="text-[15px] text-heading">We couldn’t load your diary. Check your connection.</p>
                         <button type="button" onClick={handleRetry} className="text-[14px] font-semibold text-forest hover:underline">Try again</button>
                     </div>
                 )}
 
                 {state.status === 'ready' && state.entries.length === 0 && (
-                    <div className="p-8 rounded-[20px] bg-white border border-hairline text-center flex flex-col items-center gap-2 animate-fade-in">
+                    <div className="p-8 rounded-[20px] bg-card border border-hairline text-center flex flex-col items-center gap-2 animate-fade-in">
                         <span className="w-14 h-14 rounded-2xl bg-mint text-forest flex items-center justify-center" aria-hidden="true">
                             <span className="material-symbols-outlined text-[28px]">book</span>
                         </span>

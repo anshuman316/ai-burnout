@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../hooks/useTheme'
 import { supabase } from '../lib/supabase'
 
 const links = [
@@ -41,7 +42,7 @@ const AccountMenu = () => {
         navigate('/');
     }
 
-    const avatarClass = 'w-9 h-9 rounded-full bg-forest text-white flex items-center justify-center hover:bg-forest/90 transition-colors';
+    const avatarClass = 'w-9 h-9 rounded-full bg-forest text-on-primary flex items-center justify-center hover:bg-forest/90 transition-colors';
 
     return (
         <div ref={menuRef} className="relative">
@@ -56,7 +57,7 @@ const AccountMenu = () => {
                 <span className="material-symbols-outlined text-[20px]" aria-hidden="true">person</span>
             </button>
             {open && (
-                <div id="account-menu" className="absolute right-0 top-full mt-2 w-60 rounded-2xl bg-white border border-hairline p-2 z-40">
+                <div id="account-menu" className="absolute right-0 top-full mt-2 w-60 rounded-2xl bg-card border border-hairline p-2 z-40">
                     <p className="px-3 py-2 text-[13px] text-body truncate">{session.user.email}</p>
                     <button type="button" onClick={handleLogOut} className="w-full text-left px-3 py-2 rounded-xl text-[14px] font-medium text-heading hover:bg-mint transition-colors">
                         Log out
@@ -67,6 +68,27 @@ const AccountMenu = () => {
     )
 }
 
+// Sun in dark mode, moon in light mode: the icon shows what tapping will switch to
+const ThemeToggle = () => {
+
+    const { theme, toggle } = useTheme();
+    const isDark = theme === 'dark';
+    const label = isDark ? 'Use light mode' : 'Use dark mode';
+
+    return (
+        <button
+            type="button"
+            onClick={toggle}
+            aria-pressed={isDark}
+            aria-label={label}
+            title={label}
+            className="w-9 h-9 shrink-0 rounded-full flex items-center justify-center text-body hover:text-heading hover:bg-canvas transition-colors"
+        >
+            <span className="material-symbols-outlined text-[20px]" aria-hidden="true">{isDark ? 'light_mode' : 'dark_mode'}</span>
+        </button>
+    )
+}
+
 const Navbar = () => {
 
     const { session, profileStatus } = useAuth();
@@ -74,20 +96,20 @@ const Navbar = () => {
     const appReady = Boolean(session) && profileStatus === 'complete';
 
     const topLinkClass = ({ isActive }) =>
-        `px-4 py-1.5 rounded-full text-[14px] transition-colors ${isActive ? 'bg-mint text-forest font-semibold' : 'text-body hover:text-heading'}`;
+        `px-3 sm:px-4 py-1.5 rounded-full text-[14px] whitespace-nowrap transition-colors ${isActive ? 'bg-mint text-forest font-semibold' : 'text-body hover:text-heading'}`;
 
     const tabClass = ({ isActive }) =>
         `flex flex-col items-center gap-0.5 py-2 text-[12px] ${isActive ? 'text-forest font-semibold' : 'text-body'}`;
 
     return (
         <>
-            <header className="sticky top-0 z-30 bg-white/90 backdrop-blur border-b border-hairline">
+            <header className="sticky top-0 z-30 bg-card/90 backdrop-blur border-b border-hairline">
                 <div className="max-w-6xl mx-auto h-16 px-4 md:px-8 flex items-center justify-between">
                     <Link to={appReady ? '/home' : '/'} className="flex items-center gap-2.5 font-headline text-[18px] font-bold tracking-tight text-heading">
                         <img src="/logo.png" alt="" className="w-9 h-9" />
                         Equilibria
                     </Link>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2 sm:gap-4">
                         {appReady && (
                             <>
                                 <nav aria-label="Main" className="hidden md:block">
@@ -102,10 +124,11 @@ const Navbar = () => {
                                 <span className="hidden md:block h-5 w-px bg-hairline" aria-hidden="true" />
                             </>
                         )}
+                        <ThemeToggle />
                         {session ? <AccountMenu /> : (
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 sm:gap-2">
                                 <NavLink to="/login" className={topLinkClass}>Log in</NavLink>
-                                <Link to="/signup" className="h-9 px-4 rounded-full border border-forest text-forest text-[14px] font-medium flex items-center hover:bg-mint transition-colors">Get started</Link>
+                                <Link to="/signup" className="h-9 px-3 sm:px-4 rounded-full border border-forest text-forest text-[14px] font-medium flex items-center whitespace-nowrap hover:bg-mint transition-colors">Get started</Link>
                             </div>
                         )}
                     </div>
@@ -113,7 +136,7 @@ const Navbar = () => {
             </header>
 
             {/* Phones: tabs along the bottom */}
-            {appReady && <nav aria-label="Main" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-white border-t border-hairline pb-[env(safe-area-inset-bottom)]">
+            {appReady && <nav aria-label="Main" className="md:hidden fixed bottom-0 inset-x-0 z-30 bg-card border-t border-hairline pb-[env(safe-area-inset-bottom)]">
                 <ul className="grid grid-cols-4">
                     {links.map((link) => (
                         <li key={link.to}>

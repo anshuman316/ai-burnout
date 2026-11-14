@@ -19,7 +19,7 @@ const PhotoViewer = ({ photo, onClose }) => {
                 if (e.target === dialogRef.current) dialogRef.current.close();
             }}
             aria-label={photo?.title ?? 'Comfort photo'}
-            className="m-auto p-0 max-w-[min(92vw,900px)] rounded-[20px] bg-white backdrop:bg-heading/60"
+            className="m-auto p-0 max-w-[min(92vw,900px)] rounded-[20px] bg-card backdrop:bg-scrim/60"
         >
             {photo && (
                 <figure className="relative">
@@ -29,7 +29,7 @@ const PhotoViewer = ({ photo, onClose }) => {
                         type="button"
                         onClick={() => dialogRef.current.close()}
                         aria-label="Close photo"
-                        className="absolute top-3 right-3 w-10 h-10 rounded-full bg-white/90 text-heading flex items-center justify-center hover:bg-white"
+                        className="absolute top-3 right-3 w-10 h-10 rounded-full bg-card/90 text-heading flex items-center justify-center hover:bg-card"
                     >
                         <span className="material-symbols-outlined text-[22px]" aria-hidden="true">close</span>
                     </button>

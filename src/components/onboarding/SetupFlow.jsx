@@ -11,8 +11,8 @@ import { mentionsCrisis } from '../../lib/safety'
 import { clearPendingSetup, finishSetup, savePendingSetup } from '../../lib/setup'
 import { supabase } from '../../lib/supabase'
 
-const chipClass = 'px-4 py-2.5 rounded-full border border-hairline bg-white text-[15px] text-heading cursor-pointer select-none transition-colors hover:border-leaf has-checked:bg-forest has-checked:border-forest has-checked:text-white has-focus-visible:ring-3 has-focus-visible:ring-leaf/30';
-const primaryClass = 'h-12 px-6 rounded-xl bg-forest text-white text-[15px] font-medium hover:bg-forest/90 transition-colors disabled:opacity-50';
+const chipClass = 'px-4 py-2.5 rounded-full border border-hairline bg-card text-[15px] text-heading cursor-pointer select-none transition-colors hover:border-leaf has-checked:bg-forest has-checked:border-forest has-checked:text-on-primary has-focus-visible:ring-3 has-focus-visible:ring-leaf/30';
+const primaryClass = 'h-12 px-6 rounded-xl bg-forest text-on-primary text-[15px] font-medium hover:bg-forest/90 transition-colors disabled:opacity-50';
 const quietClass = 'h-12 px-4 text-[15px] font-medium text-body hover:text-heading';
 
 // Tap-to-pick answers. multiple: checkboxes; otherwise radio buttons.
@@ -74,7 +74,7 @@ export const DayOneReady = ({ name, entryId, headingRef }) => {
                 <ul className="flex flex-col gap-3">
                     {nextSteps.map((next) => (
                         <li key={next.to}>
-                            <Link to={next.to} className="flex items-center gap-4 p-4 rounded-[20px] bg-white border border-hairline hover:border-leaf transition-colors">
+                            <Link to={next.to} className="flex items-center gap-4 p-4 rounded-[20px] bg-card border border-hairline hover:border-leaf transition-colors">
                                 <span className="w-11 h-11 shrink-0 rounded-xl bg-mint text-forest flex items-center justify-center" aria-hidden="true">
                                     <span className="material-symbols-outlined text-[22px]">{next.icon}</span>
                                 </span>
@@ -268,7 +268,7 @@ const SetupFlow = ({ mode, initial, initialProblem = null }) => {
                         maxLength={4000}
                         rows={6}
                         placeholder="It doesn’t have to be good. Just honest."
-                        className="w-full p-4 rounded-xl bg-white border border-hairline font-serif text-[17px] leading-relaxed text-heading placeholder:text-body/70 focus:outline-none focus:border-leaf focus:ring-3 focus:ring-leaf/15 resize-y"
+                        className="w-full p-4 rounded-xl bg-card border border-hairline font-serif text-[17px] leading-relaxed text-heading placeholder:text-body/70 focus:outline-none focus:border-leaf focus:ring-3 focus:ring-leaf/15 resize-y"
                     />
                     {mentionsCrisis(answers.more) && <SupportCard />}
                 </div>

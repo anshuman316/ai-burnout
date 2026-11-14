@@ -24,11 +24,11 @@ const SafetyReply = ({ content }) => (
     <div className="max-w-[85%] rounded-[20px] rounded-bl-md bg-mint border border-leaf/30 p-4 flex flex-col gap-3">
         <p className="text-[15px] leading-relaxed text-heading whitespace-pre-wrap">{content}</p>
         <div className="flex flex-wrap gap-2">
-            <a href="tel:988" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-white border border-hairline text-[14px] font-medium text-forest hover:border-leaf">
+            <a href="tel:988" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-card border border-hairline text-[14px] font-medium text-forest hover:border-leaf">
                 <span className="material-symbols-outlined text-[18px]" aria-hidden="true">call</span>
                 Call 988
             </a>
-            <a href="sms:988" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-white border border-hairline text-[14px] font-medium text-forest hover:border-leaf">
+            <a href="sms:988" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-card border border-hairline text-[14px] font-medium text-forest hover:border-leaf">
                 <span className="material-symbols-outlined text-[18px]" aria-hidden="true">sms</span>
                 Text 988
             </a>
@@ -73,7 +73,7 @@ const RevealText = ({ text, onProgress }) => {
 const TypingIndicator = () => (
     <div role="status" className="flex animate-fade-in">
         <span className="sr-only">Equilibria is thinking…</span>
-        <span className="px-4 py-4 rounded-[20px] rounded-bl-md bg-white border border-hairline flex items-center gap-1.5" aria-hidden="true">
+        <span className="px-4 py-4 rounded-[20px] rounded-bl-md bg-card border border-hairline flex items-center gap-1.5" aria-hidden="true">
             {[0, 1, 2].map((i) => (
                 <span key={i} className="w-2 h-2 rounded-full bg-leaf animate-typing-dot" style={{ animationDelay: `${i * 0.15}s` }} />
             ))}
@@ -92,7 +92,7 @@ const Message = ({ message, onProgress }) => {
         <li className={`flex ${mine ? 'justify-end' : ''} ${message.fresh ? 'animate-fade-in' : ''}`}>
             <p className={`max-w-[85%] px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap break-words ${mine
                 ? 'rounded-[20px] rounded-br-md bg-mint text-heading'
-                : 'rounded-[20px] rounded-bl-md bg-white border border-hairline text-heading'}`}>
+                : 'rounded-[20px] rounded-bl-md bg-card border border-hairline text-heading'}`}>
                 <span className="sr-only">{mine ? 'You: ' : 'Equilibria: '}</span>
                 {message.fresh && !mine ? <RevealText text={message.content} onProgress={onProgress} /> : message.content}
             </p>
@@ -201,7 +201,7 @@ const Chat = () => {
                             <p className="text-[15px] text-body max-w-sm">Say as much or as little as you like. There’s no right way to start.</p>
                             <div className="mt-2 flex flex-wrap justify-center gap-2">
                                 {STARTERS.map((starter) => (
-                                    <button key={starter} type="button" onClick={() => send(starter)} disabled={sending} className="px-4 py-2 rounded-full bg-white border border-hairline text-[14px] text-heading hover:border-leaf transition-colors disabled:opacity-60">
+                                    <button key={starter} type="button" onClick={() => send(starter)} disabled={sending} className="px-4 py-2 rounded-full bg-card border border-hairline text-[14px] text-heading hover:border-leaf transition-colors disabled:opacity-60">
                                         {starter}
                                     </button>
                                 ))}
@@ -220,7 +220,7 @@ const Chat = () => {
                 </div>
             </div>
 
-            <div className="border-t border-hairline bg-white">
+            <div className="border-t border-hairline bg-card">
                 <div className="max-w-2xl mx-auto px-4 md:px-8 py-3 flex flex-col gap-2">
                     {notice && (
                         <p role="alert" className="flex items-start gap-2 p-3 rounded-xl bg-sun/15 text-[14px] text-heading">
@@ -246,7 +246,7 @@ const Chat = () => {
                             type="submit"
                             disabled={sending || !draft.trim() || status !== 'ready'}
                             aria-label="Send"
-                            className="w-12 h-12 shrink-0 rounded-2xl bg-forest text-white flex items-center justify-center hover:bg-forest/90 transition-colors disabled:opacity-50"
+                            className="w-12 h-12 shrink-0 rounded-2xl bg-forest text-on-primary flex items-center justify-center hover:bg-forest/90 transition-colors disabled:opacity-50"
                         >
                             <span className="material-symbols-outlined text-[22px]" aria-hidden="true">arrow_upward</span>
                         </button>

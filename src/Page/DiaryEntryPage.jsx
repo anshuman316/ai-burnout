@@ -7,7 +7,7 @@ import { formatEntryDate, formatTime } from '../lib/dates'
 import { deleteEntry, getEntry, updateEntry } from '../lib/diaryStore'
 import { mentionsCrisis } from '../lib/safety'
 
-const outlineButtonClass = 'inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-white border border-hairline text-[14px] font-medium text-heading hover:border-leaf transition-colors disabled:opacity-60';
+const outlineButtonClass = 'inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-card border border-hairline text-[14px] font-medium text-heading hover:border-leaf transition-colors disabled:opacity-60';
 
 const EntryView = () => {
 
@@ -97,7 +97,7 @@ const EntryView = () => {
                             <>
                                 {mentionsCrisis(entry.body) && <SupportCard />}
 
-                                <article className="bg-white border border-hairline rounded-[20px] p-6 md:p-8 flex flex-col gap-4 animate-fade-in">
+                                <article className="bg-card border border-hairline rounded-[20px] p-6 md:p-8 flex flex-col gap-4 animate-fade-in">
                                     {(entry.tags.length > 0 || entry.isPrivate) && (
                                         <div className="flex flex-wrap items-center gap-2">
                                             {entry.isPrivate && (
@@ -117,10 +117,10 @@ const EntryView = () => {
                                 {error && <p role="alert" className="p-3 rounded-xl bg-sun/15 text-[14px] text-heading">{error}</p>}
 
                                 {mode === 'confirm-delete' ? (
-                                    <div className="p-5 rounded-[20px] bg-white border border-hairline flex flex-col gap-3">
+                                    <div className="p-5 rounded-[20px] bg-card border border-hairline flex flex-col gap-3">
                                         <p className="text-[15px] text-heading">Delete this entry for good? This can’t be undone.</p>
                                         <div className="flex flex-wrap gap-3">
-                                            <button type="button" onClick={handleDelete} disabled={busy} className="h-10 px-5 rounded-xl bg-forest text-white text-[14px] font-medium hover:bg-forest/90 disabled:opacity-60">
+                                            <button type="button" onClick={handleDelete} disabled={busy} className="h-10 px-5 rounded-xl bg-forest text-on-primary text-[14px] font-medium hover:bg-forest/90 disabled:opacity-60">
                                                 {busy ? 'Deleting…' : 'Delete entry'}
                                             </button>
                                             <button type="button" onClick={() => setMode('view')} disabled={busy} className={outlineButtonClass}>Keep it</button>

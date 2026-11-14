@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* The navbar's sun/moon button adds .dark to <html>. Only the palette below changes. */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -45,6 +48,13 @@
   --color-body: #6b7280;
   --color-hairline: #e5e7eb;
 
+  /* Cards use this instead of "white", so dark mode can flip them without
+     also changing white text on the green buttons. */
+  --color-card: #ffffff;
+
+  /* Behind the photo viewer dialog in both themes */
+  --color-scrim: #000000;
+
   --animate-gentle-pulse: gentle-pulse 6s ease-in-out infinite;
   --animate-fade-in: fade-in 350ms ease-out both;
 
@@ -72,6 +82,47 @@
     0%, 100% { transform: scale(1); opacity: 0.35; }
     50% { transform: scale(1.18); opacity: 0.7; }
   }
+}
+
+/* Dark mode palette. Outside @layer so it wins over the light values in @theme.
+   Calm and green-tinted on purpose: near-black canvas, soft off-white text,
+   mint and forest keep their meaning. No red, no pure black, no neon. */
+:root {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* Equilibria app palette */
+  --color-canvas: #0c1210;
+  --color-card: #151d19;
+  --color-forest: #3aae70;
+  --color-leaf: #45c184;
+  --color-mint: #17281e;
+  --color-heading: #e8efe9;
+  --color-body: #a3b0a8;
+  --color-hairline: #26312b;
+  --color-on-primary: #06110b;
+
+  /* Page base and focus ring (see @layer base below) */
+  --color-mist: #0c1210;
+  --color-ink: #e8efe9;
+  --color-charge: #5fd3a3;
+
+  /* Landing page tokens (HomePage is the only screen that uses these) */
+  --color-surface: #0c1210;
+  --color-surface-container-lowest: #151d19;
+  --color-surface-container-low: #111915;
+  --color-surface-container-high: #1f2b24;
+  --color-on-surface: #e8efe9;
+  --color-on-surface-variant: #a3b0a8;
+  --color-outline-variant: #26312b;
+  --color-primary: #3aae70;
+  --color-primary-container: #2c8b5b;
+  --color-primary-fixed: #1d4a30;
+  --color-primary-fixed-dim: #2a6844;
+  --color-secondary-container: #17281e;
 }
 
 @layer base {

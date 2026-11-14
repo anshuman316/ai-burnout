@@ -36,7 +36,7 @@ const RequireAuth = ({ allowUnfinishedOnboarding = false, children }) => {
             <div className={pageClass}>
                 <div role="alert" className="max-w-md text-center flex flex-col items-center gap-3">
                     <p className="text-[15px] text-heading">We couldn’t load your account. Check your connection.</p>
-                    <button type="button" onClick={() => window.location.reload()} className="h-11 px-5 rounded-xl bg-forest text-white text-[15px] font-medium hover:bg-forest/90">
+                    <button type="button" onClick={() => window.location.reload()} className="h-11 px-5 rounded-xl bg-forest text-on-primary text-[15px] font-medium hover:bg-forest/90">
                         Try again
                     </button>
                 </div>

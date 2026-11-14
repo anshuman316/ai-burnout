@@ -5,7 +5,7 @@ import SupportCard from './SupportCard'
 
 const MAX_LENGTH = 20000;
 
-const chipClass = 'px-3.5 py-1.5 rounded-full border border-hairline bg-white text-[14px] text-heading cursor-pointer select-none transition-colors hover:border-leaf has-checked:bg-forest has-checked:border-forest has-checked:text-white has-focus-visible:ring-3 has-focus-visible:ring-leaf/30';
+const chipClass = 'px-3.5 py-1.5 rounded-full border border-hairline bg-card text-[14px] text-heading cursor-pointer select-none transition-colors hover:border-leaf has-checked:bg-forest has-checked:border-forest has-checked:text-on-primary has-focus-visible:ring-3 has-focus-visible:ring-leaf/30';
 
 const TagPicker = ({ legend, options, selected, onToggle }) => (
     <fieldset>
@@ -45,7 +45,7 @@ const DiaryEditor = ({ initial, submitLabel, saving, error, onSubmit, onCancel }
 
     return (
         <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
-            <div className="bg-white border border-hairline rounded-[20px] p-5 md:p-6 flex flex-col gap-6">
+            <div className="bg-card border border-hairline rounded-[20px] p-5 md:p-6 flex flex-col gap-6">
                 <TagPicker legend="How does it feel?" options={MOOD_TAGS} selected={tags} onToggle={handleToggleTag} />
                 <TagPicker legend="What’s it about?" options={TOPIC_TAGS} selected={tags} onToggle={handleToggleTag} />
 
@@ -88,7 +88,7 @@ const DiaryEditor = ({ initial, submitLabel, saving, error, onSubmit, onCancel }
             )}
 
             <div className="flex flex-wrap items-center gap-3">
-                <button type="submit" disabled={saving} className="h-12 px-6 rounded-xl bg-forest text-white text-[15px] font-medium hover:bg-forest/90 transition-colors disabled:opacity-60 disabled:cursor-wait">
+                <button type="submit" disabled={saving} className="h-12 px-6 rounded-xl bg-forest text-on-primary text-[15px] font-medium hover:bg-forest/90 transition-colors disabled:opacity-60 disabled:cursor-wait">
                     {saving ? 'Saving…' : submitLabel}
                 </button>
                 <button type="button" onClick={onCancel} disabled={saving} className="h-12 px-4 text-[15px] font-medium text-body hover:text-heading">

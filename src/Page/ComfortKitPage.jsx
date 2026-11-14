@@ -12,7 +12,7 @@ const labelClass = 'block text-[14px] font-medium text-heading mb-1.5';
 const actionButtonClass = 'inline-flex items-center justify-center gap-1.5 h-10 px-4 rounded-xl border border-forest text-forest text-[14px] font-medium hover:bg-mint transition-colors disabled:opacity-60';
 const quietButtonClass = 'h-10 px-3 rounded-xl text-[14px] font-medium text-body hover:text-heading hover:bg-canvas disabled:opacity-60';
 
-const sectionClass = 'bg-white border border-hairline rounded-[20px] p-5 md:p-6 flex flex-col gap-4 animate-fade-in';
+const sectionClass = 'bg-card border border-hairline rounded-[20px] p-5 md:p-6 flex flex-col gap-4 animate-fade-in';
 
 const SongSection = ({ song, onSave, onRemove }) => {
 
@@ -90,7 +90,7 @@ const SongSection = ({ song, onSave, onRemove }) => {
             {mode !== 'edit' && song && (
                 <div className="flex flex-col gap-3">
                     <a href={song.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-3.5 rounded-xl bg-canvas hover:bg-mint transition-colors">
-                        <span className="w-10 h-10 shrink-0 rounded-full bg-white border border-hairline text-forest flex items-center justify-center" aria-hidden="true">
+                        <span className="w-10 h-10 shrink-0 rounded-full bg-card border border-hairline text-forest flex items-center justify-center" aria-hidden="true">
                             <span className="material-symbols-outlined text-[20px]">headphones</span>
                         </span>
                         <span className="flex flex-col min-w-0">
@@ -259,7 +259,7 @@ const ComfortKitManager = () => {
                 {status === 'loading' && <p role="status" className="text-[15px] text-body">Opening your comfort kit…</p>}
 
                 {status === 'error' && (
-                    <div role="alert" className="p-5 rounded-[20px] bg-white border border-hairline flex flex-wrap items-center justify-between gap-3">
+                    <div role="alert" className="p-5 rounded-[20px] bg-card border border-hairline flex flex-wrap items-center justify-between gap-3">
                         <p className="text-[15px] text-heading">We couldn’t load your comfort kit. Check your connection.</p>
                         <button type="button" onClick={reload} className="text-[14px] font-semibold text-forest hover:underline">Try again</button>
                     </div>

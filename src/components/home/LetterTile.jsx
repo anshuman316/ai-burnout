@@ -14,12 +14,12 @@ const LetterTile = ({ letter, className, style }) => {
             <div className="mt-5 flex flex-col items-center gap-3">
                 {/* Sealed envelope with a sun-yellow seal */}
                 <svg className="w-36 h-24" viewBox="0 0 144 96" fill="none" aria-hidden="true">
-                    <rect x="1" y="1" width="142" height="94" rx="8" fill="#e8f5ec" stroke="#e5e7eb" />
-                    <path d="M2 4 L72 50 L142 4" stroke="#14532d" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
-                    <path d="M2 94 L52 48" stroke="#14532d" strokeOpacity="0.3" strokeWidth="1.25" strokeLinecap="round" />
-                    <path d="M142 94 L92 48" stroke="#14532d" strokeOpacity="0.3" strokeWidth="1.25" strokeLinecap="round" />
-                    <circle cx="72" cy="50" r="11" fill="#f6b93b" />
-                    <path d="M67 52c3-6 8-7 10-7-1 4-3 8-10 7Z" fill="#14532d" />
+                    <rect x="1" y="1" width="142" height="94" rx="8" fill="var(--color-mint)" stroke="var(--color-hairline)" />
+                    <path d="M2 4 L72 50 L142 4" stroke="var(--color-forest)" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M2 94 L52 48" stroke="var(--color-forest)" strokeOpacity="0.3" strokeWidth="1.25" strokeLinecap="round" />
+                    <path d="M142 94 L92 48" stroke="var(--color-forest)" strokeOpacity="0.3" strokeWidth="1.25" strokeLinecap="round" />
+                    <circle cx="72" cy="50" r="11" fill="var(--color-sun)" />
+                    <path d="M67 52c3-6 8-7 10-7-1 4-3 8-10 7Z" fill="var(--color-forest)" />
                 </svg>
                 <p className="text-[15px] font-medium text-heading">{sealedLabel}</p>
             </div>

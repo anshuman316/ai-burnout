@@ -9,7 +9,7 @@ const AuthLayout = ({ title, subtitle, children, footer }) => (
                 <h1 className="font-headline text-[28px] leading-tight font-semibold tracking-[-0.02em]">{title}</h1>
                 {subtitle && <p className="mt-2 text-[15px] text-body">{subtitle}</p>}
             </div>
-            <div className="mt-8 p-5 md:p-6 rounded-[20px] bg-white border border-hairline flex flex-col gap-5">
+            <div className="mt-8 p-5 md:p-6 rounded-[20px] bg-card border border-hairline flex flex-col gap-5">
                 {children}
             </div>
             {footer && <div className="mt-6 text-center text-[14px] text-body">{footer}</div>}

@@ -38,7 +38,7 @@ export const GoogleButton = ({ onClick, children = 'Continue with Google', icon 
     <button
         type="button"
         onClick={onClick}
-        className="w-full h-12 rounded-xl bg-white border border-hairline text-heading font-medium text-[15px] hover:border-leaf active:scale-[0.99] transition-all flex items-center justify-center gap-2.5"
+        className="w-full h-12 rounded-xl bg-card border border-hairline text-heading font-medium text-[15px] hover:border-leaf active:scale-[0.99] transition-all flex items-center justify-center gap-2.5"
     >
         {icon}
         <span>{children}</span>

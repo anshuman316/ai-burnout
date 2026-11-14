@@ -5,7 +5,7 @@ export const Tile = ({ labelledBy, className = '', style, children }) => (
     <section
         aria-labelledby={labelledBy}
         style={style}
-        className={`bg-white border border-hairline rounded-[20px] p-6 flex flex-col animate-fade-in ${className}`}
+        className={`bg-card border border-hairline rounded-[20px] p-6 flex flex-col animate-fade-in ${className}`}
     >
         {children}
     </section>

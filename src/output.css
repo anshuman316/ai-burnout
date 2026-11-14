@@ -1,4 +1,4 @@
-/*! tailwindcss v4.3.4 | MIT License | https://tailwindcss.com */
+/*! tailwindcss v4.3.5 | MIT License | https://tailwindcss.com */
 @layer properties;
 @layer theme, base, components, utilities;
 @layer theme {
@@ -69,6 +69,8 @@
     --color-heading: #111827;
     --color-body: #6b7280;
     --color-hairline: #e5e7eb;
+    --color-card: #ffffff;
+    --color-scrim: #000000;
     --animate-gentle-pulse: gentle-pulse 6s ease-in-out infinite;
     --animate-fade-in: fade-in 350ms ease-out both;
     --animate-word-in: word-in 260ms ease-out both;
@@ -869,6 +871,15 @@
   .bg-canvas {
     background-color: var(--color-canvas);
   }
+  .bg-card {
+    background-color: var(--color-card);
+  }
+  .bg-card\/90 {
+    background-color: color-mix(in srgb, #ffffff 90%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-card) 90%, transparent);
+    }
+  }
   .bg-forest {
     background-color: var(--color-forest);
   }
@@ -955,15 +966,6 @@
   }
   .bg-transparent {
     background-color: transparent;
-  }
-  .bg-white {
-    background-color: var(--color-white);
-  }
-  .bg-white\/90 {
-    background-color: color-mix(in srgb, #fff 90%, transparent);
-    @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-white) 90%, transparent);
-    }
   }
   .bg-gradient-to-tr {
     --tw-gradient-position: to top right in oklab;
@@ -1298,9 +1300,6 @@
   .text-primary {
     color: var(--color-primary);
   }
-  .text-white {
-    color: var(--color-white);
-  }
   .uppercase {
     text-transform: uppercase;
   }
@@ -1517,10 +1516,10 @@
       color: color-mix(in oklab, var(--color-body) 70%, transparent);
     }
   }
-  .backdrop\:bg-heading\/60::backdrop {
-    background-color: color-mix(in srgb, #111827 60%, transparent);
+  .backdrop\:bg-scrim\/60::backdrop {
+    background-color: color-mix(in srgb, #000000 60%, transparent);
     @supports (color: color-mix(in lab, red, red)) {
-      background-color: color-mix(in oklab, var(--color-heading) 60%, transparent);
+      background-color: color-mix(in oklab, var(--color-scrim) 60%, transparent);
     }
   }
   .after\:absolute::after {
@@ -1575,6 +1574,9 @@
     .hover\:bg-canvas:hover {
       background-color: var(--color-canvas);
     }
+    .hover\:bg-card:hover {
+      background-color: var(--color-card);
+    }
     .hover\:bg-forest\/90:hover {
       background-color: color-mix(in srgb, #14532d 90%, transparent);
     }
@@ -1594,9 +1596,6 @@
     }
     .hover\:bg-surface-container-low:hover {
       background-color: var(--color-surface-container-low);
-    }
-    .hover\:bg-white:hover {
-      background-color: var(--color-white);
     }
     .hover\:text-forest:hover {
       color: var(--color-forest);
@@ -1674,8 +1673,8 @@
   .has-checked\:bg-forest:has(:checked) {
     background-color: var(--color-forest);
   }
-  .has-checked\:text-white:has(:checked) {
-    color: var(--color-white);
+  .has-checked\:text-on-primary:has(:checked) {
+    color: var(--color-on-primary);
   }
   .has-focus-visible\:ring-3:has(:focus-visible) {
     --tw-ring-shadow: var(--tw-ring-inset, ) 0 0 0 calc(3px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentcolor);
@@ -1705,6 +1704,15 @@
     }
     .sm\:items-center {
       align-items: center;
+    }
+    .sm\:gap-2 {
+      gap: calc(var(--spacing) * 2);
+    }
+    .sm\:gap-4 {
+      gap: calc(var(--spacing) * 4);
+    }
+    .sm\:px-4 {
+      padding-inline: calc(var(--spacing) * 4);
     }
   }
   @media (width >= 48rem) {
@@ -1768,6 +1776,36 @@
       grid-template-columns: repeat(12, minmax(0, 1fr));
     }
   }
+}
+:root {
+  color-scheme: light;
+}
+.dark {
+  color-scheme: dark;
+  --color-canvas: #0c1210;
+  --color-card: #151d19;
+  --color-forest: #3aae70;
+  --color-leaf: #45c184;
+  --color-mint: #17281e;
+  --color-heading: #e8efe9;
+  --color-body: #a3b0a8;
+  --color-hairline: #26312b;
+  --color-on-primary: #06110b;
+  --color-mist: #0c1210;
+  --color-ink: #e8efe9;
+  --color-charge: #5fd3a3;
+  --color-surface: #0c1210;
+  --color-surface-container-lowest: #151d19;
+  --color-surface-container-low: #111915;
+  --color-surface-container-high: #1f2b24;
+  --color-on-surface: #e8efe9;
+  --color-on-surface-variant: #a3b0a8;
+  --color-outline-variant: #26312b;
+  --color-primary: #3aae70;
+  --color-primary-container: #2c8b5b;
+  --color-primary-fixed: #1d4a30;
+  --color-primary-fixed-dim: #2a6844;
+  --color-secondary-container: #17281e;
 }
 @layer base {
   body {
