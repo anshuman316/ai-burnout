@@ -11,6 +11,9 @@ import NewEntryPage from './Page/NewEntryPage'
 import DiaryEntryPage from './Page/DiaryEntryPage'
 import GoalsPage from './Page/GoalsPage'
 import ComfortKitPage from './Page/ComfortKitPage'
+import LettersPage from './Page/LettersPage'
+import NewLetterPage from './Page/NewLetterPage'
+import LetterPage from './Page/LetterPage'
 import ForgotPasswordPage from './Page/ForgotPasswordPage'
 import ResetPasswordPage from './Page/ResetPasswordPage'
 import AuthCallbackPage from './Page/AuthCallbackPage'
@@ -39,6 +42,9 @@ function App() {
         <Route path='/diary/:id' element={<DiaryEntryPage />} />
         <Route path='/goals' element={<GoalsPage />} />
         <Route path='/comfort' element={<ComfortKitPage />} />
+        <Route path='/letters' element={<LettersPage />} />
+        <Route path='/letters/new' element={<NewLetterPage />} />
+        <Route path='/letters/:id' element={<LetterPage />} />
         <Route path='/chat' element={<ChatPage />} />
         <Route path='*' element={<NotFoundPage />} />
       </Routes>

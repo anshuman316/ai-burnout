@@ -8,6 +8,7 @@ import { useAuth } from '../context/AuthContext'
 import { homePlaceholder } from '../data/homePlaceholder'
 import { dayNumber, formatTime, formatTodayLong, greetingFor } from '../lib/dates'
 import { getDiarySummary } from '../lib/diaryStore'
+import { getLetterSummary } from '../lib/lettersStore'
 import { getDisplayName } from '../lib/profiles'
 
 // The diary tile's content from the signed-in person's latest entry
@@ -34,6 +35,8 @@ const DashboardPage = () => {
     const [profileName, setProfileName] = useState({ userId: null, name: null });
     // Latest diary entry for the signed-in user: { userId, status, latest, firstDate }
     const [diary, setDiary] = useState({ userId: null });
+    // Letters summary for the tile: counts and the next unlock time (never the words)
+    const [letters, setLetters] = useState({ userId: null, status: 'loading' });
     // The name typed during onboarding, never the Google account name
     const greetingName = profileName.userId === userId ? profileName.name?.trim() : null;
 
@@ -60,6 +63,25 @@ const DashboardPage = () => {
         return () => { cancelled = true; };
     }, [userId]);
 
+    useEffect(() => {
+        let cancelled = false;
+        const loadLetters = () => {
+            getLetterSummary()
+                .then((summary) => {
+                    if (!cancelled) setLetters({ userId, status: 'ready', ...summary });
+                })
+                .catch((error) => {
+                    console.error('Loading the letter summary failed:', error.message);
+                    // A failed refresh shouldn't wipe out a summary that already loaded
+                    if (!cancelled) setLetters((current) => current.userId === userId && current.status === 'ready' ? current : { userId, status: 'error' });
+                });
+        };
+        loadLetters();
+        // The tile turns "Ready to open" on its own when a letter unlocks
+        const timer = setInterval(loadLetters, 30000);
+        return () => { cancelled = true; clearInterval(timer); };
+    }, [userId]);
+
     return (
         <div className="bg-canvas text-heading font-body min-h-[calc(100svh-4rem)]">
             <main className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-10 flex flex-col gap-6">
@@ -83,7 +105,7 @@ const DashboardPage = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <ComfortKitTile note={data.comfortNote} style={delay(3)} />
-                    <LetterTile letter={data.letter} style={delay(4)} />
+                    <LetterTile summary={letters.userId === userId ? letters : { status: 'loading' }} style={delay(4)} />
                 </div>
 
                 <footer className="mt-4 pt-6 border-t border-hairline flex flex-col items-center gap-1.5 text-center text-[13px] text-body">
