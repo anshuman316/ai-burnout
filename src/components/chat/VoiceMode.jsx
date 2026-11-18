@@ -41,8 +41,10 @@ const Orb = ({ phase, levelRef }) => (
 
 // Full-screen voice conversation over the chat: listen → (3 seconds of quiet) → send → think →
 // speak the reply → listen again, until the person taps End. Every message also lands in the chat.
-// onSend(text, onSpoken) resolves to { reply, safety } or { error }; onSpoken runs when the reply
-// has been read aloud. A crisis reply stops the loop and shows the 988 buttons.
+// onSend(text, { onSpeaking, onSpoken }) resolves to { reply, safety } or { error }; onSpeaking runs
+// when the voice starts, onSpoken when the reply has been read aloud. The screen stays on
+// "Thinking…" until the voice starts, so the words and the voice arrive together.
+// A crisis reply stops the loop and shows the 988 buttons.
 const VoiceMode = ({ onSend, onClose, stopSpeaking, errorText }) => {
 
     // 'listening' | 'thinking' | 'speaking' | 'crisis' | 'problem'
@@ -61,8 +63,13 @@ const VoiceMode = ({ onSend, onClose, stopSpeaking, errorText }) => {
             setHeard(text);
             setPhase('thinking');
             keepGoingRef.current = true;
-            const result = await onSend(text, () => {
-                if (!closedRef.current && keepGoingRef.current) listenAgain();
+            const result = await onSend(text, {
+                onSpeaking: () => {
+                    if (!closedRef.current) setPhase((current) => (current === 'thinking' ? 'speaking' : current));
+                },
+                onSpoken: () => {
+                    if (!closedRef.current && keepGoingRef.current) listenAgain();
+                }
             });
             if (closedRef.current) return;
             if (result.error) {
@@ -73,9 +80,7 @@ const VoiceMode = ({ onSend, onClose, stopSpeaking, errorText }) => {
             if (result.safety) {
                 keepGoingRef.current = false;
                 setPhase('crisis');
-            } else if (speechOutputSupported) {
-                setPhase('speaking');
-            } else {
+            } else if (!speechOutputSupported) {
                 listenAgain();
             }
         },
@@ -174,7 +179,7 @@ const VoiceMode = ({ onSend, onClose, stopSpeaking, errorText }) => {
                     : <button type="button" onClick={close} className={quietClass}>End</button>}
             </div>
             <p className="pb-4 px-6 text-center text-[12px] text-body">
-                Equilibria is an AI, not a therapist. Your browser turns your voice into text (Chrome uses Google to do this).
+                Equilibria is an AI, not a therapist. Your browser turns your voice into text (Chrome uses Google to do this), and Google’s Gemini reads Equilibria’s replies aloud.
             </p>
         </div>
     )

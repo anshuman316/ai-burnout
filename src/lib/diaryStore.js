@@ -33,11 +33,26 @@ export const getEntry = async (id) => {
     return row ? fromRow(row) : null;
 }
 
-export const createEntry = async (entry) =>
-    fromRow(unwrap(await supabase.from('diary_entries').insert(toRow(entry)).select(COLUMNS).single()));
+// Asks the memory agent (ai-memory edge function) to write a short note about the entry for the
+// AI chat. It decides on the server whether it may (diary consent, not private). The diary never
+// waits for it, and if it fails the chat just knows a little less.
+const rememberEntry = (id) => {
+    supabase.functions.invoke('ai-memory', { body: { entryId: id } }).then(({ error }) => {
+        if (error) console.warn('The memory agent skipped a diary entry:', error.message);
+    });
+}
 
-export const updateEntry = async (id, entry) =>
-    fromRow(unwrap(await supabase.from('diary_entries').update(toRow(entry)).eq('id', id).select(COLUMNS).single()));
+export const createEntry = async (entry) => {
+    const saved = fromRow(unwrap(await supabase.from('diary_entries').insert(toRow(entry)).select(COLUMNS).single()));
+    rememberEntry(saved.id);
+    return saved;
+}
+
+export const updateEntry = async (id, entry) => {
+    const saved = fromRow(unwrap(await supabase.from('diary_entries').update(toRow(entry)).eq('id', id).select(COLUMNS).single()));
+    rememberEntry(saved.id);
+    return saved;
+}
 
 export const deleteEntry = async (id) => {
     unwrap(await supabase.from('diary_entries').delete().eq('id', id));

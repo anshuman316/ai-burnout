@@ -85,7 +85,7 @@ const TypingIndicator = () => (
 // spoken: a reply to a spoken message, read aloud, with a stop / play again button
 const Message = ({ message, onProgress, voice }) => {
     const voiceControl = message.spoken && (
-        <VoiceControl speaking={voice.speakingId === message.id} onPlay={() => voice.speak(message.id, message.content)} onStop={voice.stop} />
+        <VoiceControl speaking={voice.speakingId === message.id} onPlay={() => voice.speak(message.id, message.content, { messageId: message.messageId })} onStop={voice.stop} />
     );
     if (message.role === 'assistant' && message.isSafety) {
         return <li className={`flex ${message.fresh ? 'animate-fade-in' : ''}`}><SafetyReply content={message.content}>{voiceControl}</SafetyReply></li>;
@@ -157,8 +157,9 @@ const Chat = () => {
     const [voiceOpen, setVoiceOpen] = useState(false);
 
     // Typed messages get a typed reply; spoken messages get a reply that is also read aloud
-    // (onSpoken runs once it has been). Resolves to { reply, safety } or { error }.
-    const send = async (text, { spoken = false, onSpoken } = {}) => {
+    // (onSpeaking runs when the voice starts, onSpoken once it has finished).
+    // Resolves to { reply, safety } or { error }.
+    const send = async (text, { spoken = false, onSpeaking, onSpoken } = {}) => {
         const message = text.trim();
         if (!message || sending) return { error: 'empty' };
         localIdRef.current += 1;
@@ -169,10 +170,10 @@ const Chat = () => {
         setSending(true);
         addMessage({ id: pendingId, role: 'user', content: message, fresh: true });
         try {
-            const { reply, safety } = await sendChatMessage(message);
+            const { reply, safety, messageId } = await sendChatMessage(message);
             const speakIt = spoken && speechOutputSupported;
-            addMessage({ id: replyId, role: 'assistant', content: reply, isSafety: safety, fresh: true, spoken: speakIt });
-            if (speakIt) speech.speak(replyId, reply, onSpoken);
+            addMessage({ id: replyId, messageId, role: 'assistant', content: reply, isSafety: safety, fresh: true, spoken: speakIt });
+            if (speakIt) speech.speak(replyId, reply, { messageId, onStart: onSpeaking, onDone: onSpoken });
             return { reply, safety };
         } catch (error) {
             console.error(error.message);
@@ -190,6 +191,7 @@ const Chat = () => {
     // The mic opens voice mode: a full-screen spoken conversation over the chat
     const openVoice = () => {
         speech.stop();
+        speech.unlock();
         setNotice(null);
         setVoiceOpen(true);
     }
@@ -291,7 +293,7 @@ const Chat = () => {
 
             {voiceOpen && (
                 <VoiceMode
-                    onSend={(text, onSpoken) => send(text, { spoken: true, onSpoken })}
+                    onSend={(text, voiceCallbacks) => send(text, { spoken: true, ...voiceCallbacks })}
                     onClose={() => setVoiceOpen(false)}
                     stopSpeaking={speech.stop}
                     errorText={(code) => ERROR_MESSAGES[code] ?? FALLBACK_ERROR}

@@ -64,8 +64,13 @@ export const useSpeechInput = ({ onFinish, onError, silenceMs = 3000 }) => {
         sessionRef.current = '';
 
         recognition.onresult = (event) => {
-            sessionRef.current = Array.from(event.results, (result) => result[0].transcript).join('');
-            lastHeardRef.current = Date.now();
+            const heard = Array.from(event.results, (result) => result[0].transcript).join('');
+            // The browser re-sends the same words about a second after a pause, when it "finalises"
+            // them; that isn't new speech, so it mustn't restart the quiet countdown
+            if (heard.replace(/\W/g, '').toLowerCase() !== sessionRef.current.replace(/\W/g, '').toLowerCase()) {
+                lastHeardRef.current = Date.now();
+            }
+            sessionRef.current = heard;
             setTranscript(joinWords(keptRef.current, sessionRef.current));
         };
         recognition.onerror = (event) => {

@@ -13,7 +13,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "ai:sync": "node scripts/sync-ai-prompt.mjs",
-    "ai:deploy": "npm run ai:sync && npx supabase functions deploy ai-chat --remote=zdzawrzlceuzkcazwtdi --use-api",
+    "ai:deploy": "npm run ai:sync && npx supabase functions deploy ai-chat --remote=zdzawrzlceuzkcazwtdi --use-api && npx supabase functions deploy ai-memory --remote=zdzawrzlceuzkcazwtdi --use-api && npx supabase functions deploy ai-voice --remote=zdzawrzlceuzkcazwtdi --use-api",
     "login:deploy": "npx supabase functions deploy login --no-verify-jwt --remote=zdzawrzlceuzkcazwtdi --use-api"
   },
   "dependencies": {
