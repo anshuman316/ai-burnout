@@ -1,6 +1,10 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import SafetyReply from '../components/chat/SafetyReply'
+import VoiceMode from '../components/chat/VoiceMode'
 import RequireAuth from '../components/RequireAuth'
 import { useAuth } from '../context/AuthContext'
+import { speechInputSupported } from '../hooks/useSpeechInput'
+import { speechOutputSupported, useSpeechOutput } from '../hooks/useSpeechOutput'
 import { CHAT_DAILY_LIMIT, listChatMessages, sendChatMessage } from '../lib/aiChat'
 
 const MAX_LENGTH = 2000;
@@ -19,21 +23,16 @@ const ERROR_MESSAGES = {
 };
 const FALLBACK_ERROR = 'Couldn’t reach Equilibria. Check your connection and try again.';
 
-// The fixed crisis reply, with one-tap ways to reach 988
-const SafetyReply = ({ content }) => (
-    <div className="max-w-[85%] rounded-[20px] rounded-bl-md bg-mint border border-leaf/30 p-4 flex flex-col gap-3">
-        <p className="text-[15px] leading-relaxed text-heading whitespace-pre-wrap">{content}</p>
-        <div className="flex flex-wrap gap-2">
-            <a href="tel:988" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-card border border-hairline text-[14px] font-medium text-forest hover:border-leaf">
-                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">call</span>
-                Call 988
-            </a>
-            <a href="sms:988" className="inline-flex items-center gap-1.5 h-10 px-4 rounded-xl bg-card border border-hairline text-[14px] font-medium text-forest hover:border-leaf">
-                <span className="material-symbols-outlined text-[18px]" aria-hidden="true">sms</span>
-                Text 988
-            </a>
-        </div>
-    </div>
+// Under a reply that was read aloud: stop it, or hear it again
+const VoiceControl = ({ speaking, onPlay, onStop }) => (
+    <button
+        type="button"
+        onClick={speaking ? onStop : onPlay}
+        className="mt-1.5 inline-flex items-center gap-1 text-[13px] font-medium text-body hover:text-forest"
+    >
+        <span className="material-symbols-outlined text-[18px]" aria-hidden="true">{speaking ? 'stop_circle' : 'volume_up'}</span>
+        {speaking ? 'Stop speaking' : 'Play again'}
+    </button>
 )
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -83,19 +82,24 @@ const TypingIndicator = () => (
 
 // Replies are always rendered as plain text, never as HTML.
 // fresh: added during this visit (slides in; replies write themselves in)
-const Message = ({ message, onProgress }) => {
+// spoken: a reply to a spoken message, read aloud, with a stop / play again button
+const Message = ({ message, onProgress, voice }) => {
+    const voiceControl = message.spoken && (
+        <VoiceControl speaking={voice.speakingId === message.id} onPlay={() => voice.speak(message.id, message.content)} onStop={voice.stop} />
+    );
     if (message.role === 'assistant' && message.isSafety) {
-        return <li className={`flex ${message.fresh ? 'animate-fade-in' : ''}`}><SafetyReply content={message.content} /></li>;
+        return <li className={`flex ${message.fresh ? 'animate-fade-in' : ''}`}><SafetyReply content={message.content}>{voiceControl}</SafetyReply></li>;
     }
     const mine = message.role === 'user';
     return (
-        <li className={`flex ${mine ? 'justify-end' : ''} ${message.fresh ? 'animate-fade-in' : ''}`}>
+        <li className={`flex flex-col ${mine ? 'items-end' : 'items-start'} ${message.fresh ? 'animate-fade-in' : ''}`}>
             <p className={`max-w-[85%] px-4 py-3 text-[15px] leading-relaxed whitespace-pre-wrap break-words ${mine
                 ? 'rounded-[20px] rounded-br-md bg-mint text-heading'
                 : 'rounded-[20px] rounded-bl-md bg-card border border-hairline text-heading'}`}>
                 <span className="sr-only">{mine ? 'You: ' : 'Equilibria: '}</span>
                 {message.fresh && !mine ? <RevealText text={message.content} onProgress={onProgress} /> : message.content}
             </p>
+            {voiceControl}
         </li>
     )
 }
@@ -148,28 +152,46 @@ const Chat = () => {
 
     const addMessage = (message) => setHistory((prev) => ({ ...prev, messages: [...prev.messages, message] }));
 
-    const send = async (text) => {
+    const speech = useSpeechOutput();
+
+    const [voiceOpen, setVoiceOpen] = useState(false);
+
+    // Typed messages get a typed reply; spoken messages get a reply that is also read aloud
+    // (onSpoken runs once it has been). Resolves to { reply, safety } or { error }.
+    const send = async (text, { spoken = false, onSpoken } = {}) => {
         const message = text.trim();
-        if (!message || sending) return;
+        if (!message || sending) return { error: 'empty' };
         localIdRef.current += 1;
         const pendingId = `pending-${localIdRef.current}`;
+        const replyId = `reply-${localIdRef.current}`;
         setNotice(null);
         setDraft('');
         setSending(true);
         addMessage({ id: pendingId, role: 'user', content: message, fresh: true });
         try {
             const { reply, safety } = await sendChatMessage(message);
-            addMessage({ id: `reply-${localIdRef.current}`, role: 'assistant', content: reply, isSafety: safety, fresh: true });
+            const speakIt = spoken && speechOutputSupported;
+            addMessage({ id: replyId, role: 'assistant', content: reply, isSafety: safety, fresh: true, spoken: speakIt });
+            if (speakIt) speech.speak(replyId, reply, onSpoken);
+            return { reply, safety };
         } catch (error) {
             console.error(error.message);
             // Take the message back so it can be sent again
             setHistory((prev) => ({ ...prev, messages: prev.messages.filter((m) => m.id !== pendingId) }));
             if (error.code !== 'daily_limit') setDraft(message);
             setNotice(ERROR_MESSAGES[error.code] ?? FALLBACK_ERROR);
+            return { error: error.code };
         } finally {
             setSending(false);
             inputRef.current?.focus();
         }
+    }
+
+    // The mic opens voice mode: a full-screen spoken conversation over the chat
+    const openVoice = () => {
+        speech.stop();
+        setNotice(null);
+        setVoiceOpen(true);
     }
 
     const handleSubmit = (e) => {
@@ -211,7 +233,7 @@ const Chat = () => {
 
                     {status === 'ready' && messages.length > 0 && (
                         <ul role="log" aria-live="polite" aria-label="Conversation" className="flex flex-col gap-3">
-                            {messages.map((message) => <Message key={message.id} message={message} onProgress={scrollToEnd} />)}
+                            {messages.map((message) => <Message key={message.id} message={message} onProgress={scrollToEnd} voice={speech} />)}
                         </ul>
                     )}
 
@@ -242,6 +264,18 @@ const Chat = () => {
                             disabled={status !== 'ready'}
                             className="flex-1 min-w-0 resize-none px-4 py-3 rounded-2xl bg-canvas border border-hairline text-[15px] leading-relaxed text-heading placeholder:text-body/70 focus:outline-none focus:border-leaf focus:ring-3 focus:ring-leaf/15 disabled:opacity-60"
                         />
+                        {speechInputSupported && (
+                            <button
+                                type="button"
+                                onClick={openVoice}
+                                disabled={sending || status !== 'ready'}
+                                aria-label="Talk instead of typing"
+                                title="Talk instead of typing"
+                                className="w-12 h-12 shrink-0 rounded-2xl bg-canvas border border-hairline text-forest flex items-center justify-center hover:border-leaf transition-colors disabled:opacity-50"
+                            >
+                                <span className="material-symbols-outlined text-[22px]" aria-hidden="true">mic</span>
+                            </button>
+                        )}
                         <button
                             type="submit"
                             disabled={sending || !draft.trim() || status !== 'ready'}
@@ -254,6 +288,15 @@ const Chat = () => {
                     <p className="text-center text-[12px] text-body">Equilibria is an AI, not a therapist. In crisis? Call or text 988.</p>
                 </div>
             </div>
+
+            {voiceOpen && (
+                <VoiceMode
+                    onSend={(text, onSpoken) => send(text, { spoken: true, onSpoken })}
+                    onClose={() => setVoiceOpen(false)}
+                    stopSpeaking={speech.stop}
+                    errorText={(code) => ERROR_MESSAGES[code] ?? FALLBACK_ERROR}
+                />
+            )}
         </div>
     )
 }

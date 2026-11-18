@@ -60,6 +60,9 @@
 
   --animate-word-in: word-in 260ms ease-out both;
   --animate-typing-dot: typing-dot 1.2s ease-in-out infinite;
+  --animate-orb-think: orb-think 2.4s ease-in-out infinite;
+  --animate-orb-speak: orb-speak 1.1s ease-in-out infinite;
+  --animate-orb-ripple: orb-ripple 2.4s ease-out infinite;
 
   /* Chat: each word of a new reply settles in */
   @keyframes word-in {
@@ -76,6 +79,25 @@
   @keyframes fade-in {
     from { opacity: 0; transform: translateY(6px); }
     to { opacity: 1; transform: none; }
+  }
+
+  /* Chat voice mode: the orb breathes while thinking, sways while speaking,
+     and sends soft rings outward while it speaks */
+  @keyframes orb-think {
+    0%, 100% { transform: scale(0.94); opacity: 0.8; }
+    50% { transform: scale(1.04); opacity: 1; }
+  }
+
+  @keyframes orb-speak {
+    0%, 100% { transform: scale(1); }
+    30% { transform: scale(1.09); }
+    55% { transform: scale(1.02); }
+    75% { transform: scale(1.06); }
+  }
+
+  @keyframes orb-ripple {
+    from { transform: scale(1); opacity: 0.45; }
+    to { transform: scale(1.7); opacity: 0; }
   }
 
   @keyframes gentle-pulse {
